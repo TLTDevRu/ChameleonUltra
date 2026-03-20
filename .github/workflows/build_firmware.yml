@@ -12,7 +12,7 @@ jobs:
     name: Build and push fw-builder Docker image
     runs-on: ubuntu-latest
     permissions:
-      packages: write
+      packages: read
       contents: read
     outputs:
       image_hash: ${{ steps.push.outputs.digest }}
@@ -29,7 +29,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -58,6 +58,12 @@ jobs:
         with:
           ref: ${{ inputs.checkout-sha == null && github.sha || inputs.checkout-sha }}
           fetch-depth: 0
+      - name: ghcr.io login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build firmware
         env:
           repo: ${{ github.repository }}
