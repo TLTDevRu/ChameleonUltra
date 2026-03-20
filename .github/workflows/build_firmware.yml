@@ -12,7 +12,7 @@ jobs:
     name: Build and push fw-builder Docker image
     runs-on: ubuntu-latest
     permissions:
-      packages: read
+      packages: write
       contents: read
     outputs:
       image_hash: ${{ steps.push.outputs.digest }}
